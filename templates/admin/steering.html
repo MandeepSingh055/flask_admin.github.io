@@ -1,0 +1,121 @@
+{% extends 'admin/master.html' %}
+{% block head %}
+{{ fontawesome_html() }}
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.5/css/bootstrap-select.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.5/js/bootstrap-select.min.js"></script> 
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/default.css') }}"> 
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+
+<script>
+ getPagination('#mytable');
+</script>
+
+<script>
+$( document ).ready(function() {
+i=0;
+var w = $(window);
+var row = $('#mytable').find('tr').eq({{row_value}});
+
+if (row.length){
+    w.scrollTop( row.offset().top - (w.height()/2) );
+}
+});
+</script>
+
+
+{% endblock head %}
+
+{% block body %} 
+                   <!-- <div style='font-size:18px'>
+                     Welcome ! {{current_user.email}}
+                    </div> -->
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Ideathon Voting Panel
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+						
+						<div style='font-size:18px'> 
+							<form action="/admin/steering/" method="post" id="form2">
+                    Filter by Campaign:
+					<!--<input type="text" id="campaign_id" name="campaign_id"><br><br>
+					 <input type="submit" value="Submit"> -->
+					 <select class="selectpicker" name="campaign_id" id="campaign_id" data-style="btn-primary" title='No Filter' multiple data-width="130px" data-max-options="1" onchange="this.form.submit()">
+						<!--	<option value="1" {% if campaign_id == '1' %} selected = "selected" {% endif %}>Campaign 1</option>
+							<option value="2" {% if campaign_id == '2' %} selected = "selected" {% endif %} >Campaign 2</option>  -->
+							 {% for key, value in campaign_dict.items() %}
+							 <option value="{{key}}" {% if campaign_id == key|string() %} selected = "selected" {% endif %}>{{value}}</option>
+							 {% endfor %}  
+					</select>
+					</form>
+						</div>
+						<br>
+						   
+                            <!-- /.list-group -->
+							   <table class="table table-bordered" id='mytable'>
+                <thead>
+                    <tr>
+					   <th style="display:none">Schedule ID</th> 
+					
+					    <th>Participant</th>
+						<th>Idea Details</th>
+					<!--	<th>Attachments</th> -->
+						<th>Action</th>
+								
+                    </tr>
+                </thead>
+                <tbody>
+					{% for key,row in result.iterrows() %}
+                    <tr id='{{row.ideathon_id}}'>
+					 <td style='width:20%'>
+					 <b>{{row.student_name}}</b><br>{{row.email_id}}<br>{{row.institution_name}}<br>
+					  Attachments:<a href="{{ url_for('download_attachments', filename = row.file_name|string())}}" class="card-link" download>{{row.display_name}}</a>  <br>
+
+					 </td> 
+					 <td><b><u>{{row.idea_title}}:</u> </b><br>
+					 <span class="more">
+					 <p style="font-family:verdana">Artificial intelligence is based on the principle that human intelligence can be defined in a way that a machine can easily mimic it and execute tasks, from the most simple to those that are even more complex. The goals of artificial intelligence include mimicking human cognitive activity. Researchers and developers in the field are making surprisingly rapid strides in mimicking activities such as learning, reasoning, and perception, to the extent that these can be concretely defined. Some believe that innovators may soon be able to develop systems that exceed the capacity of humans to learn or reason out any subject. But others remain skeptical because all cognitive activity is laced with value judgments that are subject to human experience.</p><br>
+					</span>
+					 </td> 		 
+					 <td style='width:5%'>
+					 <form action="/admin/steering/" method="post" id="form1">
+                   
+				 <input type="text" id="fname" name="fname" value='{{row.ideathon_id}}' size="1" style='display:None'><br>
+				 <button class='cleared' id="vote_btn" name='vote_btn' {% if row.ideathon_id in id_list %} value='0' title="Click here to unlike the Idea" {% else %} value='1' title="Click here to like the Idea" {% endif %} onclick='this.form.submit()' >{% if row.ideathon_id in id_list %} <i class="fas fa-thumbs-up fa-2x thumb_up"></i> {% else %}  <i class="fas fa-thumbs-up fa-2x thumb_down"></i> {% endif %}</button><br>  
+				  <input type="text" id="selected_campaign_id" name="selected_campaign_id" value='{{campaign_id}}' size="1"  style='display:None'><br>
+				   <input type="text" id="row_index" name="row_index" value='{{key}}' size="1" style='display:None'><br>
+				   <input type="text" id="campaign_id_val" name="campaign_id_val" value='{{row.compaign_id}}' size="1" style='display:None'><br>
+				
+					</form>
+					 	 
+					 </td>
+                    </tr>
+					{% endfor %}                
+                </tbody>
+            </table>
+							<div class='pagination-container'>
+				<nav>
+				  <ul class="pagination">
+
+            <li data-page="prev" >
+								     <span> < <span class="sr-only">(current)</span></span>
+								    </li>
+
+        <li data-page="next" id="prev">
+								       <span> > <span class="sr-only">(current)</span></span>
+								    </li>
+				  </ul>
+				</nav>
+			</div>
+			
+			
+							<!------END --->
+                           <!-- <a href="#" class="btn btn-default btn-block">View All Alerts</a> -->
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+{% endblock body %}

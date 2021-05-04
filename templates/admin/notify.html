@@ -1,0 +1,135 @@
+{% extends 'admin/master.html' %}
+{% block head %}
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.5/css/bootstrap-select.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.5/js/bootstrap-select.min.js"></script>
+ <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/default.css') }}">  -->
+  <!--<script src="{{ url_for('static', filename='js/main.js') }}"></script> -->
+  
+  <style>
+
+.morecontent span {
+	display: none;
+}
+a.morelink {
+	text-decoration:none;
+	outline: none;
+}
+  </style>
+<script>
+ getPagination('#mytable');
+</script>
+<script>
+$(document).ready(function() {
+	var showChar = 100;
+	var ellipsestext = "....";
+	var moretext = "more";
+	var lesstext = "less";
+	$('.more').each(function() {
+		var content = $(this).html();
+
+		if(content.length > showChar) {
+
+			var c = content.substr(0, showChar);
+			var h = content.substr(showChar-1, content.length - showChar);
+
+			var html = c + '<span class="moreellipses">' + ellipsestext+ '</span><span class="morecontent"><span>' + h + '</span>&nbsp;&nbsp;<a href="" class="morelink">' + moretext + '</a></span>';
+
+			$(this).html(html);
+		}
+
+	});
+
+	$(".morelink").click(function(){
+		if($(this).hasClass("less")) {
+			$(this).removeClass("less");
+			$(this).html(moretext);
+		} else {
+			$(this).addClass("less");
+			$(this).html(lesstext);
+		}
+		$(this).parent().prev().toggle();
+		$(this).prev().toggle();
+		return false;
+	});
+});
+</script>
+
+{% endblock head %}
+{% block body %}
+
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Ideathon Report Panel
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                           <div style='font-size:15px'> 
+							<form action="/admin/notify/" method="post" id="form2">
+                    Filter by Campaign:
+					<!--<input type="text" id="campaign_id" name="campaign_id"><br><br>
+					 <input type="submit" value="Submit"> -->
+					 <select class="selectpicker" name="campaign_id" id="campaign_id" title='No Filter' data-style="btn-primary" multiple data-width="130px" data-max-options="1" onchange="this.form.submit()">
+							<option value="1" {% if campaign_id == '1' %} selected = "selected" {% endif %}>Campaign 1</option>
+							<option value="2" {% if campaign_id == '2' %} selected = "selected" {% endif %} >Campaign 2</option>
+					</select>
+					</form>
+						</div>
+						<br>
+                            <!-- /.list-group -->
+							   <table class="table table-bordered" id='mytable'>
+                <thead>
+                    <tr>
+					   <th style="display:none">Schedule ID</th> 
+					   <th>Participant</th> 
+					    <th>Idea Title</th>
+						<th>Likes</th>
+					    		
+                    </tr>
+                </thead>
+                <tbody>
+					{% for row in result %}
+                    <tr>
+					
+					 <td style='width:20%'>
+					 
+					 <b>{{row.student_name}}</b><br>{{row.email_id}}<br>{{row.institution_name}}
+					 </td> 
+					<td><b><u>{{row.idea_title}}:</u> </b><br>
+				<!--	 <span class="more">
+					 <p style="font-family:verdana">Artificial intelligence is based on the principle that human intelligence can be defined in a way that a machine can easily mimic it and execute tasks, from the most simple to those that are even more complex. The goals of artificial intelligence include mimicking human cognitive activity. Researchers and developers in the field are making surprisingly rapid strides in mimicking activities such as learning, reasoning, and perception, to the extent that these can be concretely defined. Some believe that innovators may soon be able to develop systems that exceed the capacity of humans to learn or reason out any subject. But others remain skeptical because all cognitive activity is laced with value judgments that are subject to human experience.</p><br>
+					</span></td> -->
+				<div class="more">
+					Duis nisl nibh, egestas at fermentum at, viverra et purus.
+					Maecenas lobortis odio id sapien facilisis elementum.
+					Curabitur et magna justo, et gravida augue.
+					Sed tristique pellentesque arcu quis tempor.
+				</div>					
+					 <td style='width:5%'><h4>{{row.number_of_votes}}</h4></td> 
+                    </tr>
+					{% endfor %}                
+                </tbody>
+            </table>
+			<div class='pagination-container' >
+				<nav>
+				  <ul class="pagination">
+
+            <li data-page="prev" >
+								     <span> < <span class="sr-only">(current)</span></span>
+								    </li>
+
+        <li data-page="next" id="prev">
+								       <span> > <span class="sr-only">(current)</span></span>
+								    </li>
+				  </ul>
+				</nav>
+			</div>
+							
+							<!------END --->
+                           <!-- <a href="#" class="btn btn-default btn-block">View All Alerts</a> -->
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+{% endblock body %}

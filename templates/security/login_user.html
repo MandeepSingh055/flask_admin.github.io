@@ -1,0 +1,67 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title> Login </title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">           
+    </head>
+<style>
+
+
+.topnav {
+  overflow: hidden;
+  background-color: #fff;
+  height: 50px;
+}
+
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.topnav a.active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+</style>
+	
+    <body>
+	
+<div class="topnav" >
+  <img src="{{ url_for('static', filename = 'images/logo_1.png')}}" height='50px' width='140px' style="margin-left:1.5%" alt="Motherson Sumi Infotech &amp;  Designs" title="Motherson Sumi Infotech &amp; Designs">
+			
+</div>
+	
+       <div class="body"></div> 
+	  	   
+		<div class="grad"></div> 
+		
+		<div class="header">
+			<div>MIDLabs<span><b>Ideathon</b></span></div>
+		</div>
+		<br>
+		<div class="login">
+			<!--	<input type="text" placeholder="username" name="user"><br>
+				<input type="password" placeholder="password" name="password"><br>
+				<input type="button" value="Login">  -->
+				<form action="{{ url_for_security('login') }}" method="POST">
+			 {{ login_user_form.hidden_tag() }}
+			 {{ login_user_form.email(placeholder='Email') }} <br>
+			 {{ login_user_form.password(placeholder='Password') }} <br>
+			<!--  {{ login_user_form.remember.label }} {{ login_user_form.remember }} <br> -->
+			  <input type="submit" value="Login" >
+			  
+			</form>
+		</div>
+    </body>
+</html>
+
